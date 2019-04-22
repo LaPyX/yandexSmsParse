@@ -1,4 +1,6 @@
 <?php
+// т.к. я не смог выпросить из вашего эмулятора другие варианты шаблонов текста, я в итоге накидал свои для примеров
+
  $text = '
 Пароль подтверждения: 4559
 Спишется 2234,18р.
@@ -40,18 +42,21 @@ print_r(yandexSmsParse($text));
 function yandexSmsParse($text) {
     $ret = ['code' => '', 'summa' => '', 'acc' => ''];
     
+    // находим код и вырезаем из текста
     $regexpCode = '/(?:пароль|код|code|kod|parol)(?:\D)+(\d+)/ui';
     if (preg_match($regexpCode, $text, $data)){
         $text = preg_replace($regexpCode, ' ', $text);
         $ret['code'] = $data[1];
     }
     
+    // находим сумму и вырезаем из текста
     $regexpSumma = '/(?:спишется|сумм|итог|списание|spishetsya|summ|sum|itog|spisanie|perevod|перевод)(?:\D)+([\d\,\.]+)\s?(?:r|р)/ui';
     if (preg_match($regexpSumma, $text, $data)){
         $text = preg_replace($regexpSumma, ' ', $text);
         $ret['summa'] = $data[1];
     }
     
+    // находим счет и вырезаем из текста
     $regexpAcc = '/(?:сч(?:е|ё)т|account|acc|номер|number|аккаунт|perevod|schet|перевод)(?:\D)+(\d+)/ui';
     if (preg_match($regexpAcc, $text, $data)){
         $text = preg_replace($regexpAcc, ' ', $text);
